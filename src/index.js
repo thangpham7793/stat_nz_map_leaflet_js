@@ -48,7 +48,7 @@ window.addEventListener('load', function (event) {
   const antPathGroup = L.featureGroup().addTo(map)
   // prepare the div where charts are shown
   let chartsDiv = document.getElementsByClassName('charts')[0]
-  let placeHolderHTML = `<h2>Click on a Marker or Type in the Search Bar!<h2>`
+  let placeHolderHTML = `<div class='chart-placeholder'><p>Click on a Marker or Type in the Search Bar!</p></div>`
   chartsDiv.innerHTML = placeHolderHTML
   //NOTE: basically get called every time a new cluster is made
 
@@ -302,9 +302,7 @@ window.addEventListener('load', function (event) {
 
     let regionClusterName = `${feature.properties.region}WorkCluster`
     //check if a Region cluster has been created?
-    if (
-      workClusterByRegionHashmap.hasOwnProperty(regionClusterName) === false
-    ) {
+    if (workClusterByRegionHashmap.hasOwnProperty(regionClusterName) === false) {
       workClusterByRegionHashmap[regionClusterName] = L.markerClusterGroup({
         maxClusterRadius: 100,
         showCoverageOnHover: true,
@@ -507,8 +505,7 @@ window.addEventListener('load', function (event) {
       div.onclick = onInfoClick
       return div
     },
-
-    onRemove: function (map) {},
+    onRemove: function (map) { },
   })
 
   L.control.Info = function (opts) {
@@ -522,6 +519,6 @@ window.addEventListener('load', function (event) {
   infoIcon.tabIndex = 0
 
   //TODO: extend the icon class to have a custom icon that would show the name of the region!
-  let clusterLabels = document.getElementsByClassName('cluster-label')
-  console.log(clusterLabels[0].textContent)
+  //NOTE: make an array of labels using spread syntax
+  //NOTE: Needs to readd whenever the zoom level gets lower and then back to 5
 })

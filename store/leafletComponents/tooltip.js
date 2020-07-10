@@ -1,11 +1,10 @@
-window.addEventListener('load', function (event) {
-  const colorDict = require('../data/dicts').colorDict
-  const modeDict = require('../data/dicts').modeDict
+const colorDict = require('../data/dicts').colorDict
+const modeDict = require('../data/dicts').modeDict
 
-  /***************** ANCHOR: make a single horizontal bar, used by both dataset *******/
+/***************** ANCHOR: make a single horizontal bar, used by both dataset *******/
 
-  function makeSingleBar(mode, percent) {
-    return `
+function makeSingleBar(mode, percent) {
+  return `
 <div
     style="
       display: flex;
@@ -26,29 +25,29 @@ window.addEventListener('load', function (event) {
     >
       ${modeDict[mode]}
     </p>
-    <span style="width: ${
-      percent * 3
-    }px; height: 20px; background-color: ${colorDict[mode]};"></span>
+    <span style="width: ${percent * 3}px; height: 20px; background-color: ${
+    colorDict[mode]
+  };"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${percent}%</p>
   </div>
 `
+}
+
+/***************** ANCHOR: bar charts for work data *********************************/
+
+//TODO: duplicate for school once data is sorted
+function makeWorkCommuteFlowChart(
+  address,
+  { workInArea, workOutsideArea, goThereForWork }
+) {
+  let commuteFlowCategoryDict = {
+    workInArea: `Live and work in the area`,
+    workOutsideArea: `Commute out of the area`,
+    goThereForWork: `Commute into the area`,
   }
-
-  /***************** ANCHOR: bar charts for work data *********************************/
-
-  //TODO: duplicate for school once data is sorted
-  function makeWorkCommuteFlowChart(
-    address,
-    { workInArea, workOutsideArea, goThereForWork }
-  ) {
-    let commuteFlowCategoryDict = {
-      workInArea: `Live and work in the area`,
-      workOutsideArea: `Commute out of the area`,
-      goThereForWork: `Commute into the area`,
-    }
-    //NOTE: assuming the longest always takes up 250px
-    let ratio = 235 / Math.max(workInArea, workOutsideArea, goThereForWork)
-    let title = `<h3
+  //NOTE: assuming the longest always takes up 250px
+  let ratio = 235 / Math.max(workInArea, workOutsideArea, goThereForWork)
+  let title = `<h3
                   style="
                     text-align: center;
                     align-items: center;
@@ -64,31 +63,31 @@ window.addEventListener('load', function (event) {
                   ${address}<br>Work Commuting Flows, 2018
               </h3>`
 
-    let workInAreaBar = makeSingleWorkCommuteFlowBar(
-      commuteFlowCategoryDict['workInArea'],
-      workInArea,
-      ratio,
-      'green'
-    )
-    let workOutsideAreaBar = makeSingleWorkCommuteFlowBar(
-      commuteFlowCategoryDict['workOutsideArea'],
-      workOutsideArea,
-      ratio,
-      '#111'
-    )
-    let goThereForWorkBar = makeSingleWorkCommuteFlowBar(
-      commuteFlowCategoryDict['goThereForWork'],
-      goThereForWork,
-      ratio,
-      'red'
-    )
+  let workInAreaBar = makeSingleWorkCommuteFlowBar(
+    commuteFlowCategoryDict['workInArea'],
+    workInArea,
+    ratio,
+    'green'
+  )
+  let workOutsideAreaBar = makeSingleWorkCommuteFlowBar(
+    commuteFlowCategoryDict['workOutsideArea'],
+    workOutsideArea,
+    ratio,
+    '#111'
+  )
+  let goThereForWorkBar = makeSingleWorkCommuteFlowBar(
+    commuteFlowCategoryDict['goThereForWork'],
+    goThereForWork,
+    ratio,
+    'red'
+  )
 
-    //console.log(chartHtml)
-    return title + workInAreaBar + workOutsideAreaBar + goThereForWorkBar
-  }
+  //console.log(chartHtml)
+  return title + workInAreaBar + workOutsideAreaBar + goThereForWorkBar
+}
 
-  function makeSingleWorkCommuteFlowBar(category, number, ratio, color) {
-    return `
+function makeSingleWorkCommuteFlowBar(category, number, ratio, color) {
+  return `
 <div
     style="
       display: flex;
@@ -117,12 +116,12 @@ window.addEventListener('load', function (event) {
     } people</p>
   </div>
 `
-  }
+}
 
-  function fillToWorkTooltipTemplate(address, barArr, commuteFlowChart) {
-    const [first, second, third, fourth, fifth, sixth, seventh] = barArr
+function fillToWorkTooltipTemplate(address, barArr, commuteFlowChart) {
+  const [first, second, third, fourth, fifth, sixth, seventh] = barArr
 
-    return `<div class="side-chart">
+  return `<div class="side-chart">
   <h3>
     How ${address}<br>Commute To Work, 2018
   </h3>
@@ -136,78 +135,65 @@ window.addEventListener('load', function (event) {
   ${commuteFlowChart}
 </div>
 `
-  }
+}
 
-  function makeWorkTooltipHtml(
-    { address, tooltipContent },
-    commuteFlowChartData
-  ) {
-    const barArr = tooltipContent.map(({ mode, percent }) => {
-      return makeSingleBar(mode, percent)
-    })
+function makeWorkTooltipHtml(
+  { address, tooltipContent },
+  commuteFlowChartData
+) {
+  const barArr = tooltipContent.map(({ mode, percent }) => {
+    return makeSingleBar(mode, percent)
+  })
 
-    const commuteFlowChart = makeWorkCommuteFlowChart(
-      address,
-      commuteFlowChartData
-    )
-    return fillToWorkTooltipTemplate(address, barArr, commuteFlowChart)
-  }
-
-  /***************** ANCHOR: bar charts for school data *******************************/
-
-  function makeSchoolCommuteFlowChart(
+  const commuteFlowChart = makeWorkCommuteFlowChart(
     address,
-    { schoolInArea, schoolOutsideArea, goThereForSchool }
-  ) {
-    let commuteFlowCategoryDict = {
-      schoolInArea: `Live and study in the area`,
-      schoolOutsideArea: `Commute out of the area`,
-      goThereForSchool: `Commute into the area`,
-    }
-    //NOTE: assuming the longest always takes up 250px
-    let ratio =
-      235 / Math.max(schoolInArea, schoolOutsideArea, goThereForSchool)
-    let title = `<h3
-                  style="
-                    text-align: center;
-                    align-items: center;
-                    height: 40px;
-                    margin-top: 20px;
-                    margin-bottom: 35px;
-                    font-weight: bold;
-                    word-wrap: break-word;
-                    font-size: 1.5em;
-                    text-transform: capitalize;
-                  "
-                >
+    commuteFlowChartData
+  )
+  return fillToWorkTooltipTemplate(address, barArr, commuteFlowChart)
+}
+
+/***************** ANCHOR: bar charts for school data *******************************/
+
+function makeSchoolCommuteFlowChart(
+  address,
+  { schoolInArea, schoolOutsideArea, goThereForSchool }
+) {
+  let commuteFlowCategoryDict = {
+    schoolInArea: `Live and study in the area`,
+    schoolOutsideArea: `Commute out of the area`,
+    goThereForSchool: `Commute into the area`,
+  }
+  //NOTE: assuming the longest always takes up 250px
+  let ratio = 200 / Math.max(schoolInArea, schoolOutsideArea, goThereForSchool)
+  let title = `<h3>
                   ${address}<br>Education Commuting Flows, 2018
               </h3>`
 
-    let schoolInAreaBar = makeSingleSchoolCommuteFlowBar(
-      commuteFlowCategoryDict['schoolInArea'],
-      schoolInArea,
-      ratio,
-      'green'
-    )
-    let schoolOutsideAreaBar = makeSingleSchoolCommuteFlowBar(
-      commuteFlowCategoryDict['schoolOutsideArea'],
-      schoolOutsideArea,
-      ratio,
-      '#111'
-    )
-    let goThereForSchoolBar = makeSingleSchoolCommuteFlowBar(
-      commuteFlowCategoryDict['goThereForSchool'],
-      goThereForSchool,
-      ratio,
-      'red'
-    )
+  let schoolInAreaBar = makeSingleSchoolCommuteFlowBar(
+    commuteFlowCategoryDict['schoolInArea'],
+    schoolInArea,
+    ratio,
+    'green'
+  )
+  let schoolOutsideAreaBar = makeSingleSchoolCommuteFlowBar(
+    commuteFlowCategoryDict['schoolOutsideArea'],
+    schoolOutsideArea,
+    ratio,
+    '#111'
+  )
+  let goThereForSchoolBar = makeSingleSchoolCommuteFlowBar(
+    commuteFlowCategoryDict['goThereForSchool'],
+    goThereForSchool,
+    ratio,
+    'red'
+  )
 
-    //console.log(chartHtml)
-    return title + schoolInAreaBar + schoolOutsideAreaBar + goThereForSchoolBar
-  }
+  //console.log(chartHtml)
+  return title + schoolInAreaBar + schoolOutsideAreaBar + goThereForSchoolBar
+}
 
-  function makeSingleSchoolCommuteFlowBar(category, number, ratio, color) {
-    return `
+function makeSingleSchoolCommuteFlowBar(category, number, ratio, color) {
+  return `
 <div
     style="
       display: flex;
@@ -236,11 +222,11 @@ window.addEventListener('load', function (event) {
     } people</p>
   </div>
 `
-  }
+}
 
-  function fillToSchoolTooltipTemplate(address, barArr, commuteFlowChart) {
-    const [first, second, third, fourth, fifth, sixth, seventh] = barArr
-    return `
+function fillToSchoolTooltipTemplate(address, barArr, commuteFlowChart) {
+  const [first, second, third, fourth, fifth, sixth, seventh] = barArr
+  return `
 <div class="side-chart">
   <h3>
     How ${address}<br>Commute To School, 2018
@@ -255,33 +241,26 @@ window.addEventListener('load', function (event) {
   ${commuteFlowChart}
 </div>
 `
-  }
+}
 
-  function makeSchoolTooltipHtml(
-    { address, tooltipContent },
+function makeSchoolTooltipHtml(
+  { address, tooltipContent },
+  commuteFlowChartData
+) {
+  const barArr = tooltipContent.map(({ mode, percent }) => {
+    return makeSingleBar(mode, percent)
+  })
+
+  const commuteFlowChart = makeSchoolCommuteFlowChart(
+    address,
     commuteFlowChartData
-  ) {
-    const barArr = tooltipContent.map(({ mode, percent }) => {
-      return makeSingleBar(mode, percent)
-    })
+  )
+  return fillToSchoolTooltipTemplate(address, barArr, commuteFlowChart)
+}
 
-    const commuteFlowChart = makeSchoolCommuteFlowChart(
-      address,
-      commuteFlowChartData
-    )
-    return fillToSchoolTooltipTemplate(address, barArr, commuteFlowChart)
-  }
+/***************** ANCHOR: export function for each dataset *************************/
 
-  /***************** ANCHOR: export function for each dataset *************************/
-
-  module.exports = {
-    makeWorkTooltipHtml: makeWorkTooltipHtml,
-    makeSchoolTooltipHtml: makeSchoolTooltipHtml,
-  }
-
-  // FIXME: make sure to replace undefined values with 0 when filling the template
-
-  let clusterLabels = document.getElementsByClassName('cluster-label')
-  console.log(clusterLabels)
-})
-//forEach(label => console.log(label.textContent)))
+module.exports = {
+  makeWorkTooltipHtml: makeWorkTooltipHtml,
+  makeSchoolTooltipHtml: makeSchoolTooltipHtml,
+}
