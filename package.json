@@ -16,7 +16,7 @@
   "devDependencies": {
     "browserify": "^16.5.1",
     "install": "^0.13.0",
-    "npm": "^6.14.5",
+    "npm": "^6.14.6",
     "tinyify": "^2.5.2",
     "watchify": "^3.11.1"
   }
