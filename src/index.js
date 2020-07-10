@@ -248,8 +248,9 @@ window.addEventListener('load', function (event) {
       makeAndAddAntPath(e.latlng, place, 'school')
     }
     makeHTMLChart(e.latlng)
-    //set the marker as the map center, but keep the current zoom level
-    map.setView([e.latlng.lat, e.latlng.lng], map.getZoom(), true)
+    //set the marker as the map center, but keep the current zoom level if it's more than 10, otherwise plus 2
+    let zoom = map.getZoom() >= 8 ? map.getZoom() : map.getZoom() + 2
+    map.setView([e.latlng.lat, e.latlng.lng], zoom, true)
   }
 
   function onEachSchoolPoint(feature, layer) {

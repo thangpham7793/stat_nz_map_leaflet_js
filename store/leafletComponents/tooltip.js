@@ -27,7 +27,7 @@ function makeSingleBar(mode, percent) {
     </p>
     <span style="width: ${percent * 3}px; height: 20px; background-color: ${
     colorDict[mode]
-  };"></span>
+    };"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${percent}%</p>
   </div>
 `
@@ -109,10 +109,10 @@ function makeSingleWorkCommuteFlowBar(category, number, ratio, color) {
       ${category}
     </p>
     <span style="width: ${
-      number * ratio
+    number * ratio
     }px; height: 20px; background-color: ${color};"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${
-      number ? number : 0
+    number ? number : 0
     } people</p>
   </div>
 `
@@ -122,6 +122,7 @@ function fillToWorkTooltipTemplate(address, barArr, commuteFlowChart) {
   const [first, second, third, fourth, fifth, sixth, seventh] = barArr
 
   return `<div class="side-chart">
+  <div>
   <h3>
     How ${address}<br>Commute To Work, 2018
   </h3>
@@ -132,8 +133,10 @@ function fillToWorkTooltipTemplate(address, barArr, commuteFlowChart) {
   ${fifth}
   ${sixth}
   ${seventh}
+  </div>
+  <div>
   ${commuteFlowChart}
-</div>
+  </div>
 `
 }
 
@@ -215,10 +218,10 @@ function makeSingleSchoolCommuteFlowBar(category, number, ratio, color) {
       ${category}
     </p>
     <span style="width: ${
-      number * ratio
+    number * ratio
     }px; height: 20px; background-color: ${color};"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${
-      number ? number : 0
+    number ? number : 0
     } people</p>
   </div>
 `
@@ -228,18 +231,21 @@ function fillToSchoolTooltipTemplate(address, barArr, commuteFlowChart) {
   const [first, second, third, fourth, fifth, sixth, seventh] = barArr
   return `
 <div class="side-chart">
-  <h3>
-    How ${address}<br>Commute To School, 2018
-  </h3>
-  ${first}
-  ${second}
-  ${third}
-  ${fourth}
-  ${fifth}
-  ${sixth}
-  ${seventh}
-  ${commuteFlowChart}
-</div>
+  <div>
+    <h3>
+      How ${address}<br>Commute To School, 2018
+    </h3>
+      ${first}
+      ${second}
+      ${third}
+      ${fourth}
+      ${fifth}
+      ${sixth}
+      ${seventh}
+  </div>
+  <div>
+    ${commuteFlowChart}
+  </div>
 `
 }
 
