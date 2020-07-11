@@ -209,6 +209,39 @@ window.addEventListener('load', function (event) {
     })
   }
 
+  function makeHTMLChart(latlng) {
+    if (getFeatureByLatLng(latlng) == undefined) {
+      chartsDiv.innerHTML = dataNotAvailablePlaceholder
+      return
+    }
+    //add two divs with ids for plotly charts
+    chartsDiv.innerHTML = `<div id='transport-pie-chart'></div>
+    <div id="commuting-flow-pie-chart"></div>`
+
+    //get functions and data for charts
+    let { makeTransportPieChart, makeFlowPieChart } = components.chartMaker
+    let props = getFeatureByLatLng(latlng).properties
+    let address = props.address
+
+    if (map.hasLayer(workParentGroup)) {
+      makeTransportPieChart(props, 'work', data.dicts.modeDict, Plotly)
+      makeFlowPieChart(
+        data.workCommutingFlowData[address],
+        address,
+        'work',
+        Plotly
+      )
+    } else {
+      makeTransportPieChart(props, 'school', data.dicts.modeDict, Plotly)
+      makeFlowPieChart(
+        data.schoolCommutingFlowData[address],
+        address,
+        'school',
+        Plotly
+      )
+    }
+  }
+
   function getFeatureByLatLng(latlng) {
     let dataset
     //check which layer is shown to know which dataset to use
@@ -224,29 +257,6 @@ window.addEventListener('load', function (event) {
     })[0]
     //console.log(targetFeature)
     return targetFeature
-  }
-
-  // this is like an interface, hiding away how the data is obtained!
-  function makeHTMLChart(latlng) {
-    if (getFeatureByLatLng(latlng) == undefined) {
-      chartsDiv.innerHTML = dataNotAvailablePlaceholder
-      return
-    }
-
-    let props = getFeatureByLatLng(latlng).properties
-
-    // use the appropriate chart function
-    if (map.hasLayer(workParentGroup)) {
-      chartsDiv.innerHTML = components.tooltip.makeWorkTooltipHtml(
-        props,
-        data.workCommutingFlowData[props.address]
-      )
-    } else {
-      chartsDiv.innerHTML = components.tooltip.makeSchoolTooltipHtml(
-        props,
-        data.schoolCommutingFlowData[props.address]
-      )
-    }
   }
 
   function onMarkerClick(e) {
@@ -550,4 +560,4 @@ window.addEventListener('load', function (event) {
   //TODO: extend the icon class to have a custom icon that would show the name of the region!
 })
 
-//FIXME: second chart shows 0 for school data
+//FIXME: maybe remake the geojson so that it shows the number of people as well!
