@@ -48,7 +48,8 @@ window.addEventListener('load', function (event) {
   const antPathGroup = L.featureGroup().addTo(map)
   // prepare the div where charts are shown
   let chartsDiv = document.getElementsByClassName('charts')[0]
-  let placeHolderHTML = `<div class='chart-placeholder'><p>Click on a Marker or Type in the Search Bar!</p></div>`
+  let placeHolderHTML = `<div class='chart-placeholder'><p>Zoom in, Click on a Marker or Type in the Search Bar!</p></div>`
+  let dataNotAvailablePlaceholder = `<div class='chart-placeholder'><p>No Data Was Recorded For This Location!</p></div>`
   chartsDiv.innerHTML = placeHolderHTML
   //NOTE: basically get called every time a new cluster is made
 
@@ -58,6 +59,10 @@ window.addEventListener('load', function (event) {
 
   function onBaseLayerChange() {
     clearAntPath()
+
+    //remove marker clusters of the removed layer
+    //map.removeLayer(workParentGroup)
+
     chartsDiv.innerHTML = placeHolderHTML
   }
 
@@ -68,6 +73,7 @@ window.addEventListener('load', function (event) {
     //let place = e.target._popup._content
     let latlngDict = data.dicts.newAreaDict
     let antPathData, distance, color, adjustedWeight, coordinates, label
+
     if (dataSetType === 'work') {
       antPathData = data.workAntPathData[place]
       clearAntPath()
@@ -207,22 +213,28 @@ window.addEventListener('load', function (event) {
     let dataset
     //check which layer is shown to know which dataset to use
     if (map.hasLayer(workParentGroup)) {
-      dataset = data.newSchoolData
-    } else {
       dataset = data.newWorkData
+    } else {
+      dataset = data.newSchoolData
     }
     // extract the target feature using the coordinates
     let targetFeature = dataset.filter(({ geometry }) => {
       let [targetLat, targetLng] = geometry.coordinates
       return (targetLat == latlng.lat) & (targetLng == latlng.lng)
     })[0]
-
+    //console.log(targetFeature)
     return targetFeature
   }
 
   // this is like an interface, hiding away how the data is obtained!
   function makeHTMLChart(latlng) {
+    if (getFeatureByLatLng(latlng) == undefined) {
+      chartsDiv.innerHTML = dataNotAvailablePlaceholder
+      return
+    }
+
     let props = getFeatureByLatLng(latlng).properties
+
     // use the appropriate chart function
     if (map.hasLayer(workParentGroup)) {
       chartsDiv.innerHTML = components.tooltip.makeWorkTooltipHtml(
@@ -232,15 +244,17 @@ window.addEventListener('load', function (event) {
     } else {
       chartsDiv.innerHTML = components.tooltip.makeSchoolTooltipHtml(
         props,
-        data.workCommutingFlowData[props.address]
+        data.schoolCommutingFlowData[props.address]
       )
     }
   }
 
   function onMarkerClick(e) {
     //use the relevant antPathData depending on which layer is shown (work or school)
+    //use regex to extract the clicked address: https://stackoverflow.com/questions/7167279/regex-select-all-text-between-tags
+    let placePattern = /<div class="tooltip-content"><p>(.*?)<\/p>/
 
-    let place = e.target._popup._content
+    let place = placePattern.exec(e.target._tooltip._content)[1]
 
     if (map.hasLayer(workParentGroup)) {
       makeAndAddAntPath(e.latlng, place, 'work')
@@ -254,8 +268,11 @@ window.addEventListener('load', function (event) {
   }
 
   function onEachSchoolPoint(feature, layer) {
+    //get data from feature
     let topMode = feature.properties.tooltipContent[0].mode
-
+    let topPercent = feature.properties.tooltipContent[0].percent
+    let topModeLabel = data.dicts.modeDict[topMode]
+    let address = feature.properties.address
     let icon = components.iconMaker(topMode, L.AwesomeMarkers)
 
     let marker = L.marker(feature.geometry.coordinates)
@@ -264,9 +281,16 @@ window.addEventListener('load', function (event) {
       click: onMarkerClick,
     })
 
-    marker.bindTooltip('STH ELSE', {
-      direction: 'right',
+    let schoolTooltipHtml = components.tooltip.makeMarkerTooltip(
+      address,
+      topModeLabel,
+      topPercent
+    )
+    marker.bindTooltip(schoolTooltipHtml, {
+      direction: 'top',
       sticky: 'true',
+      className: 'tooltip-container',
+      permanent: true,
     })
 
     let regionClusterName = `${feature.properties.region}SchoolCluster`
@@ -279,31 +303,18 @@ window.addEventListener('load', function (event) {
         iconCreateFunction: iconCreateFunction,
       })
     }
-    marker
-      .bindPopup(`${feature.properties.address}`)
-      .openPopup(feature.geometry.coordinates)
+    // marker
+    //   .bindPopup(`${feature.properties.address}`)
+    //   .openPopup(feature.geometry.coordinates)
     marker.addTo(schoolClusterByRegionHashmap[regionClusterName])
   }
 
   function onEachWorkPoint(feature, layer) {
-    let topMode = feature.properties.tooltipContent[0].mode
-
-    let icon = components.iconMaker(topMode, L.AwesomeMarkers)
-
-    let marker = L.marker(feature.geometry.coordinates)
-    marker.setIcon(icon)
-    marker.on({
-      click: onMarkerClick,
-    })
-
-    marker.bindTooltip('put sth else here', {
-      direction: 'right',
-      sticky: 'true',
-    })
-
     let regionClusterName = `${feature.properties.region}WorkCluster`
     //check if a Region cluster has been created?
-    if (workClusterByRegionHashmap.hasOwnProperty(regionClusterName) === false) {
+    if (
+      workClusterByRegionHashmap.hasOwnProperty(regionClusterName) === false
+    ) {
       workClusterByRegionHashmap[regionClusterName] = L.markerClusterGroup({
         maxClusterRadius: 100,
         showCoverageOnHover: true,
@@ -311,11 +322,30 @@ window.addEventListener('load', function (event) {
       })
     }
 
+    let marker = L.marker(feature.geometry.coordinates)
     let mcg = workClusterByRegionHashmap[regionClusterName]
 
-    marker
-      .bindPopup(`${feature.properties.address}`)
-      .openPopup(feature.geometry.coordinates)
+    let topMode = feature.properties.tooltipContent[0].mode
+    let topPercent = feature.properties.tooltipContent[0].percent
+    let topModeLabel = data.dicts.modeDict[topMode]
+    let address = feature.properties.address
+    let icon = components.iconMaker(topMode, L.AwesomeMarkers)
+    marker.setIcon(icon)
+    marker.on({
+      click: onMarkerClick,
+    })
+    let workTooltipHtml = components.tooltip.makeMarkerTooltip(
+      address,
+      topModeLabel,
+      topPercent
+    )
+    marker.bindTooltip(workTooltipHtml, {
+      direction: 'top',
+      sticky: 'true',
+      className: 'tooltip-container',
+      permanent: true,
+    })
+
     marker.addTo(mcg)
   }
 
@@ -369,16 +399,14 @@ window.addEventListener('load', function (event) {
 
   //TODO: move to location function once search is finished!
   function moveToLocation(latlng, title, map) {
+    map.setView([latlng.lat, latlng.lng], 14, true)
+    makeHTMLChart(latlng)
     clearAntPath()
-    console.log(latlng, title)
-    //NOTE: just need to make a function to calculate the distance, coz with the title you already got the area!
     if (map.hasLayer(workParentGroup)) {
       makeAndAddAntPath(latlng, title, 'work')
     } else {
       makeAndAddAntPath(latlng, title, 'school')
     }
-    makeHTMLChart(latlng)
-    map.setView([latlng.lat, latlng.lng], 14, true)
   }
 
   map.addControl(
@@ -506,7 +534,7 @@ window.addEventListener('load', function (event) {
       div.onclick = onInfoClick
       return div
     },
-    onRemove: function (map) { },
+    onRemove: function (map) {},
   })
 
   L.control.Info = function (opts) {
@@ -520,6 +548,6 @@ window.addEventListener('load', function (event) {
   infoIcon.tabIndex = 0
 
   //TODO: extend the icon class to have a custom icon that would show the name of the region!
-  //NOTE: make an array of labels using spread syntax
-  //NOTE: Needs to readd whenever the zoom level gets lower and then back to 5
 })
+
+//FIXME: second chart shows 0 for school data

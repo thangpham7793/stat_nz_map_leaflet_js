@@ -27,7 +27,7 @@ function makeSingleBar(mode, percent) {
     </p>
     <span style="width: ${percent * 3}px; height: 20px; background-color: ${
     colorDict[mode]
-    };"></span>
+  };"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${percent}%</p>
   </div>
 `
@@ -109,10 +109,10 @@ function makeSingleWorkCommuteFlowBar(category, number, ratio, color) {
       ${category}
     </p>
     <span style="width: ${
-    number * ratio
+      number * ratio
     }px; height: 20px; background-color: ${color};"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${
-    number ? number : 0
+      number ? number : 0
     } people</p>
   </div>
 `
@@ -218,10 +218,10 @@ function makeSingleSchoolCommuteFlowBar(category, number, ratio, color) {
       ${category}
     </p>
     <span style="width: ${
-    number * ratio
+      number * ratio
     }px; height: 20px; background-color: ${color};"></span>
     <p style="margin-left: 5px; margin-top: 15px;">${
-    number ? number : 0
+      number ? number : 0
     } people</p>
   </div>
 `
@@ -264,9 +264,16 @@ function makeSchoolTooltipHtml(
   return fillToSchoolTooltipTemplate(address, barArr, commuteFlowChart)
 }
 
+/***************** ANCHOR: function for making marker tooltip *************************/
+
+function makeMarkerTooltip(address, topModeLabel, topPercent) {
+  return `<div class="tooltip-content"><p>${address}</p><p>Highest: ${topModeLabel} (${topPercent}%)</p></div>`
+}
+
 /***************** ANCHOR: export function for each dataset *************************/
 
 module.exports = {
-  makeWorkTooltipHtml: makeWorkTooltipHtml,
-  makeSchoolTooltipHtml: makeSchoolTooltipHtml,
+  makeWorkTooltipHtml,
+  makeSchoolTooltipHtml,
+  makeMarkerTooltip,
 }
