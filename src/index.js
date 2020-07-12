@@ -95,6 +95,7 @@ window.addEventListener('load', function (event) {
         adjustedWeight = weight / 4 <= 2 ? weight / 4 + 3 : weight / 4
         // if target place is the starting point
         if (place == address) {
+          console.log(workplace_address, latlngDict[workplace_address])
           distance = (
             latlng.distanceTo(latlngDict[workplace_address]) / 1000
           ).toFixed(2)
@@ -225,9 +226,14 @@ window.addEventListener('load', function (event) {
       return
     }
     //add two divs with ids for plotly charts
-    chartsDiv.innerHTML = `<div id='transport-pie-chart'></div>
-    <div id="commuting-flow-pie-chart"></div>`
+    //FIXME: style close button span
 
+    chartsDiv.innerHTML = `<span id='closeBtn'>&times;</span><div id='transport-pie-chart'></div>
+    <div id="commuting-flow-pie-chart">`
+
+    // add cb function to closeBtn
+    let closeBtn = document.getElementById('closeBtn')
+    closeBtn.onclick = hideChartsContainer
     //get functions and data for charts
     let { makeTransportPieChart, makeFlowPieChart } = components.chartMaker
     let props = getFeatureByLatLng(latlng).properties
@@ -272,7 +278,7 @@ window.addEventListener('load', function (event) {
   function onMarkerClick(e) {
     //use the relevant antPathData depending on which layer is shown (work or school)
     //use regex to extract the clicked address: https://stackoverflow.com/questions/7167279/regex-select-all-text-between-tags
-    let placePattern = /<div class="tooltip-content"><p>(.*?)<\/p>/
+    let placePattern = /<div class="tooltip-content"><p style='font-size: 14px;'>(.*?)<\/p>/
 
     let place = placePattern.exec(e.target._tooltip._content)[1]
 
@@ -572,6 +578,3 @@ window.addEventListener('load', function (event) {
 })
 
 //FIXME: fix resize so that the center is on the right
-//FIXME: some marker doesn't show chart (possible mismatch in coordinates?)
-//FIXME: using grid kinda ruins the map reload (consider having the charts staying on top rather than pushing in)
-//FIXME: having each chart in a separate tab

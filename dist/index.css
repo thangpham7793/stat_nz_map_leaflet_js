@@ -1,20 +1,30 @@
+.body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .main-container {
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  /*   display: grid;
+  grid-template-columns: 9fr auto;
+  grid-template-areas: 'map charts'; */
+  transition: all 1s;
+  position: relative;
+  overflow-y: hidden;
+  overflow-x: hidden; 
+  /*hide the overflow */ 
+}
+
+#map {
+  /*   grid-template-areas: map; */
   width: 100vw;
   height: 100vh;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: 9fr auto;
-  grid-template-areas: 'map charts';
-  transition: all 1s;
-}
-
-#map {
-  grid-template-areas: map;
-  position: relative;
-  /* width: 100%;
-  height: 100%; */
   left: 0%;
   top: 0%;
 }
@@ -24,22 +34,32 @@
 }
 
 .outer-charts-container {
-  grid-template-areas: charts;
+  /*   grid-template-areas: charts; */
   justify-self: center;
   margin: 0 auto;
   display: flex;
+  position: absolute;
   flex-direction: column;
-  width: 0px;
+  border: 1px solid black;
+  background: #bbb;
+  opacity: 0.9;
+  z-index: 5000;
+  width: 40vw;
+  height: 100vh;
+  transform: translateX(250%);
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .slide-in {
   transition: all 1s;
-  width: 600px;
+  transform: translateX(143%);
 }
 
 .slide-out {
   transition: all 1s;
-  width: 0px;
+  transform: translateX(250%);
 }
 
 /*

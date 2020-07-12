@@ -267,7 +267,7 @@ function makeSchoolTooltipHtml(
 /***************** ANCHOR: function for making marker tooltip *************************/
 
 function makeMarkerTooltip(address, topModeLabel, topPercent) {
-  return `<div class="tooltip-content"><p>${address}</p><p>Highest: ${topModeLabel} (${topPercent}%)</p></div>`
+  return `<div class="tooltip-content"><p style='font-size: 14px;'>${address}</p><p style='font-size: 10px;'>Click Icon for Charts</p></div>`
 }
 
 /***************** ANCHOR: export function for each dataset *************************/

@@ -8,7 +8,7 @@ const chartMargin = {
   l: -20,
 }
 const chartLegend = {
-  x: 0.75,
+  x: 0.9,
   y: 1,
   font: {
     size: 10,
@@ -17,11 +17,10 @@ const chartLegend = {
 //pie config
 const pieRotation = 0
 const pieContainerWidth = 600
-const pieContainerHeight = 350
+const pieContainerHeight = 450
 
 //only show below the second chart
-const annotationText =
-  'The chart shows some categories (getting a lift, for example) which has been aggregated from multiple fields in the original data. The suppressed values have also been calculated and averaged out across suppressed fields.'
+const annotationText = `The chart shows some categories (getting a lift, for example) which has been aggregated from multiple fields in the original data.\nThe suppressed values have also been calculated and averaged out across suppressed fields.`
 
 function makeTransportPieChart(
   { address, tooltipContent },
@@ -34,16 +33,11 @@ function makeTransportPieChart(
     labels: [],
     type: 'pie',
     hoverinfo: 'label+percent',
-    // direction: 'counterclockwise',
     showlegend: true,
-    //automargin: true,
-    // textfont: {
-    //   family: font,
-    //   size: fontSize,
-    // },
-    textposition: 'auto',
-    insidetextorientation: 'horizontal',
-    // rotation: pieRotation,
+    textinfo: 'text',
+    textfont: {
+      family: font,
+    },
   }
   //get data into arrays
   let chartData = tooltipContent.reduce((dataObj, { mode, percent }) => {
@@ -54,6 +48,10 @@ function makeTransportPieChart(
     return newDataObj
   }, chartDataTemplate)
 
+  //filter out low values to have custom text labels that do not show low values
+  chartData.text = chartData.values.map((val) =>
+    val <= 5 ? null : val.toString() + '%'
+  )
   //chartData.text = chartData.labels.map(String)
   //domain maybe useful for layout since you use grid/or not
 
@@ -64,7 +62,7 @@ function makeTransportPieChart(
   //set title (probably need the place name!)
   let layout = {
     title: title,
-    width: pieContainerWidth,
+    //width: pieContainerWidth,
     // height: pieContainerHeight,
     legend: chartLegend,
     margin: chartMargin,
@@ -92,6 +90,8 @@ function makeFlowPieChart(data, address, workOrSchool, Plotly) {
     values: [],
     labels: [],
     type: 'pie',
+    textinfo: 'text',
+    hoverinfo: 'label+value+percent',
   }
 
   let chartData = Object.entries(data).reduce((dataObj, [key, value]) => {
@@ -101,6 +101,17 @@ function makeFlowPieChart(data, address, workOrSchool, Plotly) {
     return newObj
   }, chartTemplate)
 
+  //calculate percentage manually to have custom text label that doesn't show low values
+  let total = chartData.values.reduce((a, b) => a + b, 0)
+  function calculatePercentage(val) {
+    return ((100 * val) / total).toFixed(2)
+  }
+
+  let percentageArr = chartData.values.map((val) => calculatePercentage(val))
+
+  chartData.text = percentageArr.map((percent) =>
+    percent <= 5 ? null : percent.toString() + '%'
+  )
   //domain maybe useful for layout since you use grid/or not
   let title =
     workOrSchool == 'work'
@@ -110,12 +121,10 @@ function makeFlowPieChart(data, address, workOrSchool, Plotly) {
   //set title (probably need the place name!)
   let layout = {
     title: title,
-    width: pieContainerWidth,
+    //width: pieContainerWidth,
     // height: pieContainerHeight,
     legend: chartLegend,
     margin: chartMargin,
-    textposition: 'auto',
-    insidetextorientation: 'horizontal',
     paper_bgcolor: paper_bgcolor,
     plot_bgcolor: plot_bgcolor,
     annotations: [
@@ -123,14 +132,14 @@ function makeFlowPieChart(data, address, workOrSchool, Plotly) {
         xref: 'paper',
         yref: 'paper',
         //moving the annotation up and down
-        x: -0.1,
-        y: -0.06,
+        x: -0.25,
+        y: -0.1,
         text: annotationText,
         showarrow: false,
         font: {
           family: font,
           size: fontSize - 2.5,
-          color: 'rgb(150,150,150)',
+          color: '#aaa',
         },
       },
     ],
@@ -146,3 +155,5 @@ module.exports = {
   makeTransportPieChart,
   makeFlowPieChart,
 }
+
+//FIXME: make charts into tabs and adjust legend position
