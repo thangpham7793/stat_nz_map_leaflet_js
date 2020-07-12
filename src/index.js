@@ -47,11 +47,24 @@ window.addEventListener('load', function (event) {
   const workClusterByRegionHashmap = {}
   const antPathGroup = L.featureGroup().addTo(map)
   // prepare the div where charts are shown
-  let chartsDiv = document.getElementsByClassName('charts')[0]
+  let chartsDiv = document.getElementsByClassName('outer-charts-container')[0]
   let placeHolderHTML = `<div class='chart-placeholder'><p>Zoom in, Click on a Marker or Type in the Search Bar!</p></div>`
   let dataNotAvailablePlaceholder = `<div class='chart-placeholder'><p>No Data Was Recorded For This Location!</p></div>`
   chartsDiv.innerHTML = placeHolderHTML
   //NOTE: basically get called every time a new cluster is made
+
+  function showChartsContainer() {
+    chartsDiv.classList.remove('slide-in')
+    chartsDiv.classList.remove('slide-out')
+    chartsDiv.classList.add('slide-in')
+  }
+
+  function hideChartsContainer() {
+    chartsDiv.classList.remove('slide-in')
+    chartsDiv.classList.remove('slide-out')
+    chartsDiv.classList.add('slide-out')
+    chartsDiv.innerHTML = ''
+  }
 
   function clearAntPath() {
     antPathGroup.clearLayers()
@@ -59,11 +72,8 @@ window.addEventListener('load', function (event) {
 
   function onBaseLayerChange() {
     clearAntPath()
-
-    //remove marker clusters of the removed layer
-    //map.removeLayer(workParentGroup)
-
-    chartsDiv.innerHTML = placeHolderHTML
+    hideChartsContainer()
+    //chartsDiv.innerHTML = placeHolderHTML
   }
 
   function makeAndAddAntPath(latlng, place, dataSetType) {
@@ -272,6 +282,7 @@ window.addEventListener('load', function (event) {
       makeAndAddAntPath(e.latlng, place, 'school')
     }
     makeHTMLChart(e.latlng)
+    showChartsContainer()
     //set the marker as the map center, but keep the current zoom level if it's more than 10, otherwise plus 2
     let zoom = map.getZoom() >= 8 ? map.getZoom() : map.getZoom() + 2
     map.setView([e.latlng.lat, e.latlng.lng], zoom, true)
@@ -560,4 +571,7 @@ window.addEventListener('load', function (event) {
   //TODO: extend the icon class to have a custom icon that would show the name of the region!
 })
 
-//FIXME: maybe remake the geojson so that it shows the number of people as well!
+//FIXME: fix resize so that the center is on the right
+//FIXME: some marker doesn't show chart (possible mismatch in coordinates?)
+//FIXME: using grid kinda ruins the map reload (consider having the charts staying on top rather than pushing in)
+//FIXME: having each chart in a separate tab
