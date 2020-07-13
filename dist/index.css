@@ -76,45 +76,60 @@
   transform: translateX(250%);
 }
 
-/*
-.side-chart {
-  display: flex;
-  flex-direction: column;
-  width: 545px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  background-color: #fff;
-  font-weight: 500;
-  font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+@media only screen and (max-width: 992px) {
+   .slide-in {
+    transition: all 1s;
+    transform: translateX(45%);
+  }
+  .outer-charts-container {
+    width: 67vw;
+  }
+   .outer-charts-container > span {
+    width: 2.6vw;
+  }
+} 
+
+@media only screen and (max-width: 768px) {
+  .slide-in {
+    transition: all 1s;
+    transform: translateX(38%);
+  }
+  .outer-charts-container {
+    width: 70vw;
+  }
+   .outer-charts-container > span {
+    width: 2.6vw;
+  }
 }
 
-.side-chart h3 {
-  text-align: center;
-  align-items: center;
-  height: 40px;
-  margin-bottom: 35px;
-  font-weight: bold;
-  word-wrap: break-word;
-  font-size: 1.5em;
-  text-transform: capitalize;
+
+@media only screen and (max-width: 600px) {
+  .slide-in {
+    transition: all 1s;
+    transform: translateX(15%);
+  }
+  .outer-charts-container {
+    width: 85vw;
+  }
+  .outer-charts-container > span {
+    width: 3.5vw;
+  }
 }
 
-.side-chart > div {
-  margin-left: 10px;
-  margin-bottom: 30px;
-  padding: 0 0 25px 5px;
-  background: #fff;
-  border: 2px solid rgba(0, 0, 0, 0.2);
+@media only screen and (max-width: 375px) {
+  .slide-in {
+    transition: all 1s;
+    transform: translateX(0%);
+  }
+  .outer-charts-container {
+    width: 100vw;
+    overflow-x: visible;
+  }
+  .outer-charts-container > span {
+    width: 5vw;
+  }
 }
-
-.side-chart > div p {
-  background: ;
-  padding-right: 5px;
-}
-
-.side-chart > div span {
-  margin-left: px;
-} */
 
 .tooltip-container {
   padding: 5px 0px 0px 0px;
@@ -145,16 +160,8 @@
   padding: 0 5px 2px 5px;
 }
 
-
-
 .awesome-marker i {
   font-size: 17px;
-}
-
-.cluster-label {
-  width: max-content;
-  color: white;
-  font-weight: bolder;
 }
 
 .leaflet-control-search .search-input {
@@ -185,7 +192,7 @@
 .fa-info-circle:hover,
 .fa-info-circle:focus {
   font-size: 35px;
-  color: #111;
+  color: orangered;
   border: 50% solid #fff;
   transition-duration: 0.1s;
   transform-origin: center;
@@ -199,7 +206,7 @@
   font-size: 12.5px;
 }
 
-button.leaflet-control {
+.leaflet-control {
   background-color: #fff;
   border-radius: 5px;
   padding: 5px 8px;
@@ -225,5 +232,53 @@ button.leaflet-control:active {
   border-radius: 5px;
   padding: 5px 8px;
   cursor: pointer;
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(1, 1, 1, 0.3);
+}
+
+.cluster-label {
+  width: max-content;
+  font-size: 14px;
+  margin-left: -5px;
+  padding: 0 5px 0 5px;
+  font-weight: 600;
+  color: orange !important;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #222;
+  opacity: 0.9;
+  border-radius: 18%;
+  transition: 0.2s;
+  transform-origin: center;
+}
+
+.cluster-label:hover {
+  background: #ddd;
+  color: black !important;
+  font-size: 16px !important;
+  opacity: 1;
+}
+
+.West div p {
+  margin-left: -6px;
+}
+
+.West {
+  margin-top: -50px !important;
+  margin-left: -39px !important;
+}
+
+.Otago {
+  margin-top: -40px !important;
+}
+
+.Otago div p {
+  margin-left: 0px;
+}
+
+.Waikato {
+  margin-top: -10.5px !important;
+}
+
+.info-control {
+  border: none;
+  background: transparent;
 }

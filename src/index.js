@@ -16,7 +16,7 @@ window.addEventListener('load', function (event) {
       maxZoom: 18,
       minZoom: 0,
       noWrap: false,
-      opacity: 0.8,
+      opacity: 1,
       subdomains: 'abc',
       tms: false,
     }
@@ -209,13 +209,11 @@ window.addEventListener('load', function (event) {
     let label
     regionNameDict.hasOwnProperty(childCount) & (map.getZoom() <= 5)
       ? (label = regionNameDict[childCount])
-      : (label = `${childCount}<br>areas`)
+      : (label = `${childCount} areas`)
+
     return new L.DivIcon({
-      html:
-        '<div><p class="cluster-label" style="color:#120216;">' +
-        label +
-        '</p></div>',
-      className: 'marker-cluster' + c,
+      html: `<div><p class="cluster-label">` + label + '</p></div>',
+      className: 'marker-cluster' + 'medium' + ` ${label}` + ' label-div',
       iconSize: new L.Point(45, 45),
     })
   }
@@ -226,8 +224,6 @@ window.addEventListener('load', function (event) {
       return
     }
     //add two divs with ids for plotly charts
-    //FIXME: style close button span
-
     chartsDiv.innerHTML = `<span id='closeBtn'>&times;</span><div id='transport-pie-chart'></div><div id="commuting-flow-pie-chart">`
 
     // add cb function to closeBtn
@@ -325,7 +321,8 @@ window.addEventListener('load', function (event) {
       schoolClusterByRegionHashmap.hasOwnProperty(regionClusterName) === false
     ) {
       schoolClusterByRegionHashmap[regionClusterName] = L.markerClusterGroup({
-        maxClusterRadius: 140,
+        maxClusterRadius: 100,
+        showCoverageOnHover: false,
         iconCreateFunction: iconCreateFunction,
       })
     }
@@ -343,7 +340,7 @@ window.addEventListener('load', function (event) {
     ) {
       workClusterByRegionHashmap[regionClusterName] = L.markerClusterGroup({
         maxClusterRadius: 100,
-        showCoverageOnHover: true,
+        showCoverageOnHover: false,
         iconCreateFunction: iconCreateFunction,
       })
     }
@@ -519,9 +516,14 @@ window.addEventListener('load', function (event) {
     // console.log('Testing')
   }
 
+  function onMapClick() {
+    hideChartsContainer()
+  }
+
   map.on({
     baselayerchange: onBaseLayerChange,
     overlayadd: onOverlayAdd,
+    click: onMapClick,
   })
 
   /****************** ANCHOR: extra control layers for the control layer ********************/
@@ -529,7 +531,7 @@ window.addEventListener('load', function (event) {
     onAdd: function (map) {
       var btn = L.DomUtil.create('button')
       //btn.onclick = clearAntPath(e)
-      btn.innerText = 'Clear All Paths'
+      btn.innerText = 'Clear'
       btn.onclick = function () {
         antPathGroup.clearLayers()
       }
@@ -556,7 +558,7 @@ window.addEventListener('load', function (event) {
       div.classList.add('info-control')
       //NOTE: so it's just an object with a bunch of properties built in
       let normalStyle = {
-        color: 'orangered',
+        color: '#111',
         cursor: 'pointer',
         marginBottom: '15px',
         fontSize: '30px',
@@ -602,4 +604,4 @@ window.addEventListener('load', function (event) {
   //TODO: extend the icon class to have a custom icon that would show the name of the region!
 })
 
-//FIXME: fix resize so that the center is on the right
+//FIXME: close layer control when onMarkerClick
