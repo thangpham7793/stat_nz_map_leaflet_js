@@ -20,7 +20,7 @@ window.addEventListener('load', function (event) {
       subdomains: 'abc',
       tms: false,
     }
-  ).addTo(map)
+  )
 
   //NOTE: 2018 stat area layer from StatNZ
   const statAreaLayer = L.tileLayer(
@@ -37,7 +37,7 @@ window.addEventListener('load', function (event) {
       subdomains: 'abc',
       tms: false,
     }
-  )
+  ).addTo(map)
 
   /******************************** ANCHOR: MARKER LAYERS *****************************/
 
@@ -228,8 +228,7 @@ window.addEventListener('load', function (event) {
     //add two divs with ids for plotly charts
     //FIXME: style close button span
 
-    chartsDiv.innerHTML = `<span id='closeBtn'>&times;</span><div id='transport-pie-chart'></div>
-    <div id="commuting-flow-pie-chart">`
+    chartsDiv.innerHTML = `<span id='closeBtn'>&times;</span><div id='transport-pie-chart'></div><div id="commuting-flow-pie-chart">`
 
     // add cb function to closeBtn
     let closeBtn = document.getElementById('closeBtn')
@@ -291,7 +290,7 @@ window.addEventListener('load', function (event) {
     showChartsContainer()
     //set the marker as the map center, but keep the current zoom level if it's more than 10, otherwise plus 2
     let zoom = map.getZoom() >= 8 ? map.getZoom() : map.getZoom() + 2
-    map.setView([e.latlng.lat, e.latlng.lng], zoom, true)
+    map.setView([e.latlng.lat, e.latlng.lng + 0.2], zoom, true)
   }
 
   function onEachSchoolPoint(feature, layer) {
@@ -443,7 +442,7 @@ window.addEventListener('load', function (event) {
       markerLocation: true,
       moveToLocation: moveToLocation,
       textPlaceholder: 'Area Name ...',
-      collapsed: false,
+      collapsed: true,
       marker: {
         //custom L.Marker or false for hide
         icon: false, //custom L.Icon for maker location or false for hide
@@ -463,7 +462,7 @@ window.addEventListener('load', function (event) {
   /******************************** ANCHOR: GPS SEARCH LAYER *************************/
 
   L.Control.geocoder({
-    collapsed: false,
+    collapsed: true,
     placeholder: 'Street address...',
     geocoder: L.Control.Geocoder.nominatim(),
     defaultMarkGeocode: true,
@@ -475,8 +474,8 @@ window.addEventListener('load', function (event) {
 
   const layer_control = {
     base_layers: {
-      'How Kiwis Commute to School in 2018': schoolParentGroup,
       'How Kiwis Commute to Work in 2018': workParentGroup,
+      'How Kiwis Commute to School in 2018': schoolParentGroup,
     },
     overlays: {
       '2018 Statistical Area Clipped': statAreaLayer,
@@ -487,20 +486,43 @@ window.addEventListener('load', function (event) {
   L.control
     .layers(layer_control.base_layers, layer_control.overlays, {
       autoZIndex: true,
-      collapsed: false,
+      collapsed: true,
       position: 'topleft',
     })
     .addTo(map)
 
-  //openStreetMap.remove()
+  //FIXME: make sure that the button is unchecked as well!
+  let statAreaTickBox = document.getElementsByClassName(
+    'leaflet-control-layers-selector'
+  )[2]
+  let openStreetMapTickBox = document.getElementsByClassName(
+    'leaflet-control-layers-selector'
+  )[3]
+
+  //turning the overlay into radio buttons so only one overlay is present at a time
+  statAreaTickBox.type = 'radio'
+  openStreetMapTickBox.type = 'radio'
+  //giving them the same name so they belong to one group
+  statAreaTickBox.name = 'overlay'
+  openStreetMapTickBox.name = 'overlay'
+  //openStreetMapTickBox.defaultChecked = false
+  //openStreetMapTickBox.checked = 'checked'
+
+  function onOverlayAdd(e) {
+    if (e.name == '2018 Statistical Area Clipped') {
+      openStreetMap.remove()
+      openStreetMapTickBox.checked = false
+    } else if ((e.name = 'Open Street Map')) {
+      statAreaLayer.remove()
+      statAreaTickBox.checked = false
+    }
+    // console.log('Testing')
+  }
 
   map.on({
     baselayerchange: onBaseLayerChange,
+    overlayadd: onOverlayAdd,
   })
-
-  //TODO: add a tooltip on the corner of the map (just set z index larger!) The tooltip can be a layer of the map https://leafletjs.com/examples/extending/extending-3-controls.html (the tooltip should dim the map!)
-  //TODO: reformat the control layer
-  //TODO: add clear path button
 
   /****************** ANCHOR: extra control layers for the control layer ********************/
   L.Control.AntPathControl = L.Control.extend({
@@ -510,6 +532,9 @@ window.addEventListener('load', function (event) {
       btn.innerText = 'Clear All Paths'
       btn.onclick = function () {
         antPathGroup.clearLayers()
+      }
+      btn.onmouseout = function () {
+        btn.classList.add('button-default-style')
       }
       return btn
     },
@@ -569,7 +594,7 @@ window.addEventListener('load', function (event) {
   }
 
   L.control.Info({ position: 'bottomleft' }).addTo(map)
-  let scaleControl = L.control.scale({ position: 'topleft' })
+  let scaleControl = L.control.scale({ position: 'bottomright' })
   scaleControl.addTo(map)
   let infoIcon = document.getElementsByClassName('fas fa-info-circle')[0]
   infoIcon.tabIndex = 0

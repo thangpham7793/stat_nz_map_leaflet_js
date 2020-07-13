@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  overflow-y: hidden;
 }
 
 .main-container {
@@ -14,9 +15,9 @@
   grid-template-areas: 'map charts'; */
   transition: all 1s;
   position: relative;
+  overflow-x: hidden;
   overflow-y: hidden;
-  overflow-x: hidden; 
-  /*hide the overflow */ 
+  /*hide the overflow */
 }
 
 #map {
@@ -27,6 +28,7 @@
   margin: 0;
   left: 0%;
   top: 0%;
+  overflow-y: hidden;
 }
 
 .chart-placeholder {
@@ -34,7 +36,6 @@
 }
 
 .outer-charts-container {
-  /*   grid-template-areas: charts; */
   justify-self: center;
   margin: 0 auto;
   display: flex;
@@ -49,7 +50,20 @@
   transform: translateX(250%);
   overflow: auto;
   overflow-x: hidden;
-  overflow-y: hidden;
+  background: rgb(248, 248, 255); 
+}
+
+.outer-charts-container > span {
+  background: rgb(248, 248, 255);
+  padding: 5px;
+  width: 1.75vw;
+}
+
+.outer-charts-container > span:hover, 
+.outer-charts-container > span:focus {
+  color: white;
+  background: #111;
+  cursor: pointer;
 }
 
 .slide-in {
@@ -131,6 +145,8 @@
   padding: 0 5px 2px 5px;
 }
 
+
+
 .awesome-marker i {
   font-size: 17px;
 }
@@ -189,11 +205,25 @@ button.leaflet-control {
   padding: 5px 8px;
   cursor: pointer;
   border: 2px solid rgba(0, 0, 0, 0.2);
-  transition-duration: 0.1s;
+  transition-duration: 0.2s;
 }
 
 button.leaflet-control:hover,
 button.leaflet-control:focus {
-  background-color: orangered;
+  background-color: orange;
   color: #111;
+}
+
+button.leaflet-control:active {
+  background: orangered;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.button-default-style {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 5px 8px;
+  cursor: pointer;
+  border: 2px solid rgba(0, 0, 0, 0.2);
 }

@@ -3,12 +3,14 @@ const paper_bgcolor = 'rgb(248,248,255)'
 const plot_bgcolor = 'rgb(248,248,255)'
 const font = "Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;"
 const fontSize = 10
-const annotationTextColor = 'rgb(150,150,150)'
 const chartMargin = {
-  l: -20,
+  l: 0,
+  t: 45,
+  r: 80,
+  pad: 5,
 }
 const chartLegend = {
-  x: 0.9,
+  x: 0.855,
   y: 1,
   font: {
     size: 10,
@@ -123,26 +125,16 @@ function makeFlowPieChart(data, address, workOrSchool, Plotly) {
     title: title,
     //width: pieContainerWidth,
     // height: pieContainerHeight,
-    legend: chartLegend,
+    legend: {
+      x: 0.8,
+      y: 1,
+      font: {
+        size: 10,
+      },
+    },
     margin: chartMargin,
     paper_bgcolor: paper_bgcolor,
     plot_bgcolor: plot_bgcolor,
-    annotations: [
-      {
-        xref: 'paper',
-        yref: 'paper',
-        //moving the annotation up and down
-        x: -0.25,
-        y: -0.1,
-        text: annotationText,
-        showarrow: false,
-        font: {
-          family: font,
-          size: fontSize - 2.5,
-          color: '#aaa',
-        },
-      },
-    ],
   }
   //need to keep everything in order
   Plotly.newPlot('commuting-flow-pie-chart', [chartData], layout, {
