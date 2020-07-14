@@ -50,7 +50,7 @@
   transform: translateX(250%);
   overflow: auto;
   overflow-x: hidden;
-  background: rgb(248, 248, 255); 
+  background: rgb(248, 248, 255);
 }
 
 .outer-charts-container > span {
@@ -59,7 +59,7 @@
   width: 1.75vw;
 }
 
-.outer-charts-container > span:hover, 
+.outer-charts-container > span:hover,
 .outer-charts-container > span:focus {
   color: white;
   background: #111;
@@ -76,19 +76,18 @@
   transform: translateX(250%);
 }
 
-
 @media only screen and (max-width: 992px) {
-   .slide-in {
+  .slide-in {
     transition: all 1s;
     transform: translateX(45%);
   }
   .outer-charts-container {
     width: 67vw;
   }
-   .outer-charts-container > span {
+  .outer-charts-container > span {
     width: 2.6vw;
   }
-} 
+}
 
 @media only screen and (max-width: 768px) {
   .slide-in {
@@ -98,11 +97,10 @@
   .outer-charts-container {
     width: 70vw;
   }
-   .outer-charts-container > span {
+  .outer-charts-container > span {
     width: 2.6vw;
   }
 }
-
 
 @media only screen and (max-width: 600px) {
   .slide-in {
@@ -279,4 +277,89 @@ button.leaflet-control:active {
 .info-control {
   border: none;
   background: transparent;
+}
+
+/* The Modal (background) */
+.modal {
+  position: fixed; /* Stay in place */
+  z-index: 9000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+}
+
+/* Add Animation */
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+/* The Close Button */
+.close {
+  color: #222;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal {
+  font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #ec8805;
+  color: white;
+  text-align: center;
+}
+
+.modal-body {
+  padding: 2px 16px;
+}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #ec8805;
+  color: white;
+}
+
+.w3-content > div p {
+  font-size: 14px;
+  margin: 5px 58px 0 58px;
+  padding: 0 10px;
+  background: #efe;
+  line-height: 2em;
 }

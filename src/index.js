@@ -95,7 +95,6 @@ window.addEventListener('load', function (event) {
         adjustedWeight = weight / 4 <= 2 ? weight / 4 + 3 : weight / 4
         // if target place is the starting point
         if (place == address) {
-          console.log(workplace_address, latlngDict[workplace_address])
           distance = (
             latlng.distanceTo(latlngDict[workplace_address]) / 1000
           ).toFixed(2)
@@ -567,8 +566,22 @@ window.addEventListener('load', function (event) {
         borderRadius: '50%',
       }
 
+      //MODAL
+      let modal = document.getElementById('myModal')
+      let span = document.getElementsByClassName('close')[0]
+
       function onInfoClick() {
-        alert('Instructions Will Be Updated!')
+        modal.style.display = 'block'
+      }
+
+      span.onclick = function () {
+        modal.style.display = 'none'
+      }
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none'
+        }
       }
 
       function setInitialStyle({
@@ -603,7 +616,34 @@ window.addEventListener('load', function (event) {
   let infoIcon = document.getElementsByClassName('fas fa-info-circle')[0]
   infoIcon.tabIndex = 0
 
-  //TODO: extend the icon class to have a custom icon that would show the name of the region!
-})
+  //ANCHOR: info slideshow
+  let slideIndex = 1
+  showDivs(slideIndex)
 
-//FIXME: close layer control when onMarkerClick
+  function plusDivs(n) {
+    console.log('clicked!')
+    showDivs((slideIndex += n))
+  }
+
+  function showDivs(n) {
+    let x = [...document.getElementsByClassName('mySlides')]
+    //console.log(slideIndex, x.length)
+    if (n > x.length) {
+      slideIndex = 1
+    }
+    if (n < 1) {
+      slideIndex = x.length
+    }
+    x.forEach((x) => (x.style.display = 'none'))
+    x[slideIndex - 1].style.display = 'block'
+  }
+
+  let leftSlideBtn = document.getElementsByClassName('w3-display-left')[0]
+  let rightSlideBtn = document.getElementsByClassName('w3-display-right')[0]
+  leftSlideBtn.onclick = function () {
+    plusDivs(-1)
+  }
+  rightSlideBtn.onclick = function () {
+    plusDivs(1)
+  }
+})
