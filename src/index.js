@@ -489,10 +489,12 @@ window.addEventListener('load', function (event) {
     .addTo(map)
 
   //FIXME: make sure that the button is unchecked as well!
-  let statAreaTickBox = document.getElementsByClassName(
+
+  let openStreetMapTickBox = document.getElementsByClassName(
     'leaflet-control-layers-selector'
   )[2]
-  let openStreetMapTickBox = document.getElementsByClassName(
+
+  let statAreaTickBox = document.getElementsByClassName(
     'leaflet-control-layers-selector'
   )[3]
 
