@@ -241,9 +241,9 @@ button.leaflet-control:active {
   margin-left: -5px;
   padding: 0 5px 0 5px;
   font-weight: 600;
-  color: orange !important;
+  color: black !important;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  background: #222;
+  background: orange;
   opacity: 0.9;
   border-radius: 18%;
   transition: 0.2s;
@@ -263,7 +263,7 @@ button.leaflet-control:active {
 
 .West {
   margin-top: -50px !important;
-  margin-left: -39px !important;
+  margin-left: -99px !important;
 }
 
 .Otago {

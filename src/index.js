@@ -20,7 +20,7 @@ window.addEventListener('load', function (event) {
       subdomains: 'abc',
       tms: false,
     }
-  )
+  ).addTo(map)
 
   //NOTE: 2018 stat area layer from StatNZ
   const statAreaLayer = L.tileLayer(
@@ -37,7 +37,7 @@ window.addEventListener('load', function (event) {
       subdomains: 'abc',
       tms: false,
     }
-  ).addTo(map)
+  )
 
   /******************************** ANCHOR: MARKER LAYERS *****************************/
 
@@ -475,8 +475,8 @@ window.addEventListener('load', function (event) {
       'How Kiwis Commute to School in 2018': schoolParentGroup,
     },
     overlays: {
-      '2018 Statistical Area Clipped': statAreaLayer,
       'Open Street Map': openStreetMap,
+      '2018 Area Boundaries': statAreaLayer,
     },
   }
 
@@ -506,7 +506,7 @@ window.addEventListener('load', function (event) {
   //openStreetMapTickBox.checked = 'checked'
 
   function onOverlayAdd(e) {
-    if (e.name == '2018 Statistical Area Clipped') {
+    if (e.name == '2018 Area Boundaries') {
       openStreetMap.remove()
       openStreetMapTickBox.checked = false
     } else if ((e.name = 'Open Street Map')) {
