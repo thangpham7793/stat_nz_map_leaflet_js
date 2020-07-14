@@ -45,7 +45,7 @@
   background: #bbb;
   opacity: 0.9;
   z-index: 5000;
-  width: 40vw;
+  width: 45vw;
   height: 100vh;
   transform: translateX(250%);
   overflow: auto;
@@ -68,7 +68,7 @@
 
 .slide-in {
   transition: all 1s;
-  transform: translateX(143%);
+  transform: translateX(122%);
 }
 
 .slide-out {
@@ -79,7 +79,7 @@
 @media only screen and (max-width: 992px) {
   .slide-in {
     transition: all 1s;
-    transform: translateX(45%);
+    transform: translateX(49.5%);
   }
   .outer-charts-container {
     width: 67vw;
@@ -92,26 +92,26 @@
 @media only screen and (max-width: 768px) {
   .slide-in {
     transition: all 1s;
-    transform: translateX(38%);
+    transform: translateX(43%);
   }
   .outer-charts-container {
     width: 70vw;
   }
   .outer-charts-container > span {
-    width: 2.6vw;
+    width: 3.2vw;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .slide-in {
     transition: all 1s;
-    transform: translateX(15%);
+    transform: translateX(11.5%);
   }
   .outer-charts-container {
-    width: 85vw;
+    width: 90vw;
   }
   .outer-charts-container > span {
-    width: 3.5vw;
+    width: 3.85vw;
   }
 }
 
@@ -146,7 +146,7 @@
   font-size: 12.5px;
   font-weight: 700;
   margin-top: -6px;
-  background-color: orangered;
+  background-color: orange;
   display: flex;
   flex-direction: column;
 }

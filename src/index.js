@@ -6,6 +6,66 @@ window.addEventListener('load', function (event) {
 
   const map = L.map('map').setView(mapCenter, 5)
 
+  //ANCHOR: add info here so that it loads first
+  L.Control.Info = L.Control.extend({
+    onAdd: function (map) {
+      let div = L.DomUtil.create('div')
+      div.classList.add('info-control')
+      //NOTE: so it's just an object with a bunch of properties built in
+      let normalStyle = {
+        color: '#111',
+        cursor: 'pointer',
+        marginBottom: '15px',
+        fontSize: '30px',
+        borderRadius: '50%',
+      }
+
+      //MODAL
+      let modal = document.getElementById('myModal')
+      let span = document.getElementsByClassName('close')[0]
+
+      function onInfoClick() {
+        modal.style.display = 'block'
+      }
+
+      span.onclick = function () {
+        modal.style.display = 'none'
+      }
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none'
+        }
+      }
+
+      function setInitialStyle({
+        color,
+        cursor,
+        marginBottom,
+        fontSize,
+        borderRadius,
+      }) {
+        div.style.color = color
+        div.style.cursor = cursor
+        div.style.marginBottom = marginBottom
+        div.style.fontSize = fontSize
+        div.style.borderRadius = borderRadius
+      }
+      setInitialStyle(normalStyle)
+
+      div.innerHTML = '<i class="fas fa-info-circle"></i>'
+      div.onclick = onInfoClick
+      return div
+    },
+    onRemove: function (map) {},
+  })
+
+  L.control.Info = function (opts) {
+    return new L.Control.Info(opts)
+  }
+
+  L.control.Info({ position: 'topright' }).addTo(map)
+
   const openStreetMap = L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -553,64 +613,6 @@ window.addEventListener('load', function (event) {
 
   L.control.AntPathControl({ position: 'topleft' }).addTo(map)
 
-  L.Control.Info = L.Control.extend({
-    onAdd: function (map) {
-      let div = L.DomUtil.create('div')
-      div.classList.add('info-control')
-      //NOTE: so it's just an object with a bunch of properties built in
-      let normalStyle = {
-        color: '#111',
-        cursor: 'pointer',
-        marginBottom: '15px',
-        fontSize: '30px',
-        borderRadius: '50%',
-      }
-
-      //MODAL
-      let modal = document.getElementById('myModal')
-      let span = document.getElementsByClassName('close')[0]
-
-      function onInfoClick() {
-        modal.style.display = 'block'
-      }
-
-      span.onclick = function () {
-        modal.style.display = 'none'
-      }
-
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = 'none'
-        }
-      }
-
-      function setInitialStyle({
-        color,
-        cursor,
-        marginBottom,
-        fontSize,
-        borderRadius,
-      }) {
-        div.style.color = color
-        div.style.cursor = cursor
-        div.style.marginBottom = marginBottom
-        div.style.fontSize = fontSize
-        div.style.borderRadius = borderRadius
-      }
-      setInitialStyle(normalStyle)
-
-      div.innerHTML = '<i class="fas fa-info-circle"></i>'
-      div.onclick = onInfoClick
-      return div
-    },
-    onRemove: function (map) {},
-  })
-
-  L.control.Info = function (opts) {
-    return new L.Control.Info(opts)
-  }
-
-  L.control.Info({ position: 'bottomleft' }).addTo(map)
   let scaleControl = L.control.scale({ position: 'bottomright' })
   scaleControl.addTo(map)
   let infoIcon = document.getElementsByClassName('fas fa-info-circle')[0]
