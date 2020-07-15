@@ -283,7 +283,7 @@ button.leaflet-control:active {
 .modal {
   position: fixed; /* Stay in place */
   z-index: 9000; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 50px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -362,4 +362,23 @@ button.leaflet-control:active {
   padding: 0 10px;
   background: #efe;
   line-height: 2em;
+}
+
+.mySlides {
+  text-align: center;
+  display: flex;
+  flex-direction: row-reverse;
+  padding-bottom: 5px;
+}
+
+.mySlides img {
+  align-content: center;
+  width: 780px;
+  height: 400px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.mySlides p {
+  font-size: 12.5px;
 }
