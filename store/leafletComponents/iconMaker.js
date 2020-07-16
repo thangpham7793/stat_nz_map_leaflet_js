@@ -11,13 +11,3 @@ function iconMaker(topMode, awesomeMarkers) {
 }
 
 module.exports = iconMaker
-
-// customIcon({
-//   iconUrl: './passenger.png',
-//   className: 'passenger-shadow passenger',
-//   iconSize: [35, 45],
-//   iconAnchor: [17, 42],
-//   popupAnchor: [1, -32],
-//   shadowAnchor: [10, 12],
-//   shadowSize: [36, 16],
-// })

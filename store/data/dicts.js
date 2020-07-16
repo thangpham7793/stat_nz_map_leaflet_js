@@ -8425,6 +8425,12 @@ const colorDict = {
   Bicycle: 'lightgray',
   Walk_or_jog: 'blue',
   Other: 'cadetblue',
+  workInArea: 'rgb(0, 48, 240)',
+  workOutsideArea: 'rgb(240, 88, 0)',
+  goThereForWork: 'rgb(0, 204, 0)',
+  schoolInArea: 'rgb(0, 48, 240)',
+  schoolOutsideArea: 'rgb(240, 88, 0)',
+  goThereForSchool: 'rgb(0, 204, 0)',
 }
 
 const modeDict = {

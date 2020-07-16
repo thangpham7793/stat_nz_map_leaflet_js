@@ -1,3 +1,5 @@
+const colorDict = require('../data/dicts').colorDict
+
 //chart global vars:
 const paper_bgcolor = 'rgb(248,248,255)'
 const plot_bgcolor = 'rgb(248,248,255)'
@@ -37,6 +39,9 @@ function makeTransportPieChart(
     hoverinfo: 'label+percent',
     showlegend: true,
     textinfo: 'text',
+    marker: {
+      colors: [],
+    },
     textfont: {
       family: font,
     },
@@ -47,6 +52,7 @@ function makeTransportPieChart(
     //just need to look up the lable using the dict obj
     newDataObj.labels.push(labelDict[mode])
     newDataObj.values.push(percent)
+    newDataObj.marker.colors.push(colorDict[mode])
     return newDataObj
   }, chartDataTemplate)
 
@@ -94,12 +100,16 @@ function makeFlowPieChart(data, address, workOrSchool, Plotly) {
     type: 'pie',
     textinfo: 'text',
     hoverinfo: 'label+value+percent',
+    marker: {
+      colors: [],
+    },
   }
 
   let chartData = Object.entries(data).reduce((dataObj, [key, value]) => {
     let newObj = { ...dataObj }
     dataObj.values.push(value)
     dataObj.labels.push(commuteFlowCategoryDict[key])
+    dataObj.marker.colors.push(colorDict[key])
     return newObj
   }, chartTemplate)
 
